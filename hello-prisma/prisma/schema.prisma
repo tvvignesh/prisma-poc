@@ -1,0 +1,33 @@
+datasource db {
+    provider = "postgresql"
+    url      = "postgresql://vignesh:tcrocks@localhost:5432/test?schema=test"
+}
+
+generator photonjs {
+    provider = "photonjs"
+    output   = "node_modules/@generated/photon"
+}
+
+model User {
+    id    String  @id @default(cuid())
+    name  String? @map("username")
+    email String  @unique
+
+    @@map("users")
+}
+
+model Post {
+    id         Int        @id
+    createdAt  DateTime   @default(now())
+    updatedAt  DateTime   @updatedAt
+    author     User
+    title      String
+    published  Boolean    @default(false)
+    categories Category[]
+}
+
+model Category {
+    id    Int    @id
+    name  String
+    posts Post[]
+}
